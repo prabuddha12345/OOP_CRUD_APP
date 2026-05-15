@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard — TutorEase</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700;1,800&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-logo" onclick="location.href='../index.html'" style="cursor:pointer">Tutor<span>Ease</span></div>
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="tutors.html">Find Tutors</a>
+      <a href="bookings.html">My Bookings</a>
+      <a href="admin.html" class="active">Admin</a>
+    </div>
+    <span class="badge" id="api-badge">⚙ Backend: Checking...</span>
+  </nav>
+
+  <div class="inner-page">
+    <div class="inner-header">
+      <div>
+        <h1>Admin Dashboard</h1>
+        <p>Manage tutors, bookings and system data</p>
+      </div>
+    </div>
+
+    <!-- OVERVIEW STATS -->
+    <div class="admin-stats">
+      <div class="astat-card">
+        <div class="astat-icon">👨‍🏫</div>
+        <div class="astat-num" id="a-tutors">--</div>
+        <div class="astat-label">Total Tutors</div>
+      </div>
+      <div class="astat-card">
+        <div class="astat-icon">📅</div>
+        <div class="astat-num" id="a-bookings">--</div>
+        <div class="astat-label">Total Bookings</div>
+      </div>
+      <div class="astat-card">
+        <div class="astat-icon">⏳</div>
+        <div class="astat-num" id="a-pending">--</div>
+        <div class="astat-label">Pending Bookings</div>
+      </div>
+      <div class="astat-card">
+        <div class="astat-icon">✅</div>
+        <div class="astat-num" id="a-completed">--</div>
+        <div class="astat-label">Completed Sessions</div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tab-bar">
+      <button class="tab active" onclick="switchTab('tutors-tab', this)">Manage Tutors</button>
+      <button class="tab" onclick="switchTab('bookings-tab', this)">Manage Bookings</button>
+    </div>
+
+    <!-- TUTORS TAB -->
+    <div id="tutors-tab" class="tab-content active">
+      <div class="card table-card">
+        <div class="table-top">
+          <h3>All Tutors</h3>
+          <button class="btn btn-primary" onclick="location.href='tutors.html'">+ Add Tutor</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>Name</th><th>Subject</th><th>Grade</th>
+                <th>Location</th><th>Rate (LKR/hr)</th><th>Exp</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-tutors-tbody">
+              <tr><td colspan="8" class="empty">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOOKINGS TAB -->
+    <div id="bookings-tab" class="tab-content">
+      <div class="card table-card">
+        <div class="table-top">
+          <h3>All Bookings</h3>
+          <button class="btn btn-outline" onclick="loadAdminData()">↻ Refresh</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th><th>Student</th><th>Tutor</th><th>Date</th>
+                <th>Address</th><th>Status</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-bookings-tbody">
+              <tr><td colspan="7" class="empty">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT TUTOR MODAL -->
+  <div class="modal-overlay" id="edit-tutor-modal" style="display:none">
+    <div class="modal">
+      <h3>Edit Tutor</h3>
+      <input type="hidden" id="et-id"/>
+      <div class="modal-form">
+        <div class="form-row-2">
+          <div class="field-group"><label>Name</label><input type="text" id="et-name"/></div>
+          <div class="field-group"><label>Email</label><input type="email" id="et-email"/></div>
+        </div>
+        <div class="form-row-2">
+          <div class="field-group"><label>Phone</label><input type="text" id="et-phone"/></div>
+          <div class="field-group"><label>Location</label><input type="text" id="et-location"/></div>
+        </div>
+        <div class="form-row-2">
+          <div class="field-group">
+            <label>Subject</label>
+            <select id="et-subject">
+              <option>Mathematics</option><option>Science</option><option>English</option>
+              <option>Physics</option><option>Chemistry</option><option>Biology</option>
+              <option>ICT</option><option>History</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label>Grade</label>
+            <select id="et-grade">
+              <option>Grade 1–5</option><option>Grade 6–9</option>
+              <option>O/L (Grade 10–11)</option><option>A/L (Grade 12–13)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="field-group"><label>Hourly Rate (LKR)</label><input type="number" id="et-rate"/></div>
+          <div class="field-group"><label>Experience (years)</label><input type="number" id="et-exp"/></div>
+        </div>
+        <div class="field-group"><label>Bio</label><textarea id="et-bio" rows="3"></textarea></div>
+      </div>
+      <div class="modal-btns">
+        <button class="btn btn-primary" onclick="updateTutor()">Save Changes</button>
+        <button class="btn btn-outline" onclick="closeModal('edit-tutor-modal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-info">
+        <div class="footer-logo">Tutor<span>Ease</span></div>
+        <p>Connecting students with expert tutors across Sri Lanka. Quality education, personalized for you.</p>
+      </div>
+      <div class="footer-links-col">
+        <h4>Platform</h4>
+        <div class="footer-links">
+          <a href="../index.html">Home</a>
+          <a href="tutors.html">Find Tutors</a>
+          <a href="register-tutor.html">Register as Tutor</a>
+        </div>
+      </div>
+      <div class="footer-links-col">
+        <h4>Support</h4>
+        <div class="footer-links">
+          <a href="contact.html">Contact Us</a>
+          <a href="about.html">About Us</a>
+          <a href="privacy.html">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">&copy; 2024 TutorEase Platform. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="../js/api.js?v=2"></script>
+  <script src="../js/app.js?v=2"></script>
+  <script>
+    loadAdminData();
+    checkBackend();
+
+    function switchTab(id, btn) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>
