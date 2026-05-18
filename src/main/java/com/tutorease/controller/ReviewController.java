@@ -5,4 +5,6 @@ import org.springframework.web.bind.annotation.*;
 public class ReviewController {
     @PostMapping
     public String addReview() { return "added"; }
+    @GetMapping
+    public String getReviews() { return "[]"; }
 }
