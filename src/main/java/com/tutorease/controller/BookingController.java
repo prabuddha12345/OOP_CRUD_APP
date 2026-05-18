@@ -5,4 +5,6 @@ import org.springframework.web.bind.annotation.*;
 public class BookingController {
     @PostMapping
     public String createBooking() { return "created"; }
+    @PutMapping("/{id}/status")
+    public String updateStatus() { return "updated"; }
 }
