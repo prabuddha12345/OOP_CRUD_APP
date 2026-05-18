@@ -59,7 +59,7 @@
       <div class="card table-card">
         <div class="table-top">
           <h3>All Tutors</h3>
-          <button class="btn btn-primary" onclick="location.href='tutors.html'">+ Add Tutor</button>
+          <button class="btn btn-primary" onclick="openAddTutorModal()">+ Add Tutor</button>
         </div>
         <div class="table-wrap">
           <table>
@@ -147,9 +147,106 @@
 
   </div>
 
+  <!-- ADD TUTOR MODAL -->
+  <div class="modal-overlay" id="add-tutor-modal" style="display:none">
+    <div class="modal" style="max-width: 650px;">
+      <h3>Add New Teacher</h3>
+      
+      <!-- Modal Error/Success Notification box -->
+      <div id="tutor-msg" style="margin-bottom: 16px; font-weight: bold; text-align: center;"></div>
+      
+      <div class="modal-form">
+        <div class="form-row-2">
+          <div class="field-group">
+            <label>Username <span style="color:var(--danger)">*</span></label>
+            <input type="text" id="t-username" placeholder="Choose a username" required/>
+          </div>
+          <div class="field-group">
+            <label>Password <span style="color:var(--danger)">*</span></label>
+            <input type="password" id="t-password" placeholder="Create a password" required/>
+          </div>
+        </div>
+        
+        <div class="form-row-2">
+          <div class="field-group">
+            <label>Teacher Name <span style="color:var(--danger)">*</span></label>
+            <input type="text" id="t-name" placeholder="John Doe" required/>
+          </div>
+          <div class="field-group">
+            <label>Email Address <span style="color:var(--danger)">*</span></label>
+            <input type="email" id="t-email" placeholder="teacher@example.com" required/>
+          </div>
+        </div>
+        
+        <div class="form-row-2">
+          <div class="field-group">
+            <label>Phone Number <span style="color:var(--danger)">*</span></label>
+            <input type="text" id="t-phone" placeholder="Contact number" required/>
+          </div>
+          <div class="field-group">
+            <label>Address / Location <span style="color:var(--danger)">*</span></label>
+            <input type="text" id="t-location" placeholder="City or Full Address" required/>
+          </div>
+        </div>
+        
+        <div class="form-row-2">
+          <div class="field-group">
+            <label>Subject / Specialization <span style="color:var(--danger)">*</span></label>
+            <select id="t-subject">
+              <option value="Mathematics">Mathematics</option>
+              <option value="Science">Science</option>
+              <option value="English">English</option>
+              <option value="Physics">Physics</option>
+              <option value="Chemistry">Chemistry</option>
+              <option value="Biology">Biology</option>
+              <option value="ICT">ICT</option>
+              <option value="History">History</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label>Grade Level</label>
+            <select id="t-grade">
+              <option value="Grade 1–5">Grade 1–5</option>
+              <option value="Grade 6–9">Grade 6–9</option>
+              <option value="O/L (Grade 10–11)">O/L (Grade 10–11)</option>
+              <option value="A/L (Grade 12–13)">A/L (Grade 12–13)</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-row-2">
+          <div class="field-group">
+            <label>Qualifications <span style="color:var(--danger)">*</span></label>
+            <input type="text" id="t-qualifications" placeholder="e.g. BSc in Math, PGDE" required/>
+          </div>
+          <div class="field-group">
+            <label>Experience (Years) <span style="color:var(--danger)">*</span></label>
+            <input type="number" id="t-exp" min="0" placeholder="e.g. 5" required/>
+          </div>
+        </div>
+        
+        <div class="form-row-2">
+          <div class="field-group">
+            <label>Hourly Rate (LKR/hr) <span style="color:var(--danger)">*</span></label>
+            <input type="number" id="t-rate" min="0" placeholder="Hourly teaching rate" required/>
+          </div>
+          <div class="field-group">
+            <label>Biography / Bio</label>
+            <input type="text" id="t-bio" placeholder="Brief professional intro"/>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-btns">
+        <button class="btn btn-primary" onclick="addTutor()">Add Teacher</button>
+        <button class="btn btn-outline" onclick="closeModal('add-tutor-modal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <!-- EDIT TUTOR MODAL -->
   <div class="modal-overlay" id="edit-tutor-modal" style="display:none">
-    <div class="modal">
+    <div class="modal" style="max-width: 650px;">
       <h3>Edit Tutor</h3>
       <input type="hidden" id="et-id"/>
       <div class="modal-form">
@@ -182,7 +279,10 @@
           <div class="field-group"><label>Hourly Rate (LKR)</label><input type="number" id="et-rate"/></div>
           <div class="field-group"><label>Experience (years)</label><input type="number" id="et-exp"/></div>
         </div>
-        <div class="field-group"><label>Bio</label><textarea id="et-bio" rows="3"></textarea></div>
+        <div class="form-row-2">
+          <div class="field-group"><label>Qualifications</label><input type="text" id="et-qualifications" placeholder="Credentials"/></div>
+          <div class="field-group"><label>Bio</label><textarea id="et-bio" rows="1" style="height:45px;"></textarea></div>
+        </div>
       </div>
       <div class="modal-btns">
         <button class="btn btn-primary" onclick="updateTutor()">Save Changes</button>

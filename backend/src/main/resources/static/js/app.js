@@ -168,76 +168,91 @@ function updateResultCount(n) {
 
 // CREATE - Add tutor
 function openAddTutorModal() {
+  clearForm(["t-username", "t-password", "t-name", "t-email", "t-phone", "t-location", "t-qualifications", "t-exp", "t-rate", "t-bio"]);
+  const msg = document.getElementById("tutor-msg");
+  if (msg) msg.textContent = "";
   document.getElementById("add-tutor-modal").style.display = "flex";
 }
 
 async function addTutor() {
-  const username   = val("t-username");
-  const password   = val("t-password");
-  const name       = val("t-name");
-  const email      = val("t-email");
-  const phone      = val("t-phone");
-  const location   = val("t-location");
-  const subject    = val("t-subject");
-  const gradeLevel = val("t-grade");
-  const hourlyRate = parseFloat(val("t-rate")) || 0;
-  const experience = parseInt(val("t-exp"))    || 0;
-  const bio        = val("t-bio");
-  const msg        = document.getElementById("tutor-msg");
+  const username       = val("t-username");
+  const password       = val("t-password");
+  const name           = val("t-name");
+  const email          = val("t-email");
+  const phone          = val("t-phone");
+  const location       = val("t-location");
+  const subject        = val("t-subject");
+  const gradeLevel     = val("t-grade");
+  const qualifications = val("t-qualifications");
+  const experience     = parseInt(val("t-exp")) || 0;
+  const hourlyRate     = parseFloat(val("t-rate")) || 0;
+  const bio            = val("t-bio");
+  const msg            = document.getElementById("tutor-msg");
 
-  if (!username || !password || !name || !email || !phone || !location) {
-    showMsg(msg, "⚠ Please fill in all required fields (Username, Password, Name, etc.).", "var(--danger)"); return;
+  if (!username || !password || !name || !email || !phone || !location || !qualifications) {
+    showMsg(msg, "⚠ Please fill in all required fields (Username, Password, Name, Email, Phone, Address, Qualifications).", "var(--danger)"); 
+    return;
+  }
+
+  // Email validation regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    showMsg(msg, "⚠ Please enter a valid email address.", "var(--danger)");
+    return;
   }
 
   try {
     await apiPost(API_CONFIG.ENDPOINTS.tutors, { 
-      username, password, name, email, phone, location, subject, gradeLevel, hourlyRate, experience, bio 
+      username, password, name, email, phone, location, subject, gradeLevel, qualifications, experience, hourlyRate, bio 
     });
-    showMsg(msg, "✅ Tutor registered successfully! You can now log in.", "var(--accent)");
-    clearForm(["t-username", "t-password", "t-name", "t-email", "t-phone", "t-location", "t-bio", "t-rate", "t-exp"]);
     
-    // Redirect to login after a short delay
+    showMsg(msg, "✅ Tutor registered successfully!", "var(--accent)");
+    clearForm(["t-username", "t-password", "t-name", "t-email", "t-phone", "t-location", "t-qualifications", "t-exp", "t-rate", "t-bio"]);
+    
+    // Refresh table and close modal after short delay
     setTimeout(() => {
       if (window.location.pathname.includes("register-tutor.html")) {
         window.location.href = "login.html";
       } else {
         closeModal("add-tutor-modal");
-        loadAllTutors();
+        loadAdminData();
       }
-    }, 2000);
+    }, 1500);
   } catch (err) {
-    const errorMsg = err.message || "Failed to register. Backend error.";
+    const errorMsg = err.message || "Failed to register. Username or email might already exist.";
     showMsg(msg, `❌ ${errorMsg}`, "var(--danger)");
   }
 }
 
 // UPDATE tutor (admin)
 function openEditTutorModal(t) {
-  set("et-id",       t.id);
-  set("et-name",     t.name);
-  set("et-email",    t.email);
-  set("et-phone",    t.phone);
-  set("et-location", t.location);
-  set("et-subject",  t.subject);
-  set("et-grade",    t.gradeLevel);
-  set("et-rate",     t.hourlyRate);
-  set("et-exp",      t.experience);
-  set("et-bio",      t.bio);
+  set("et-id",             t.id);
+  set("et-name",           t.name);
+  set("et-email",          t.email);
+  set("et-phone",          t.phone);
+  set("et-location",       t.location);
+  set("et-subject",        t.subject);
+  set("et-grade",          t.gradeLevel);
+  set("et-rate",           t.hourlyRate);
+  set("et-exp",            t.experience);
+  set("et-qualifications", t.qualifications);
+  set("et-bio",            t.bio);
   document.getElementById("edit-tutor-modal").style.display = "flex";
 }
 
 async function updateTutor() {
   const id = val("et-id");
   const body = {
-    name:       val("et-name"),
-    email:      val("et-email"),
-    phone:      val("et-phone"),
-    location:   val("et-location"),
-    subject:    val("et-subject"),
-    gradeLevel: val("et-grade"),
-    hourlyRate: parseFloat(val("et-rate")) || 0,
-    experience: parseInt(val("et-exp"))    || 0,
-    bio:        val("et-bio")
+    name:           val("et-name"),
+    email:          val("et-email"),
+    phone:          val("et-phone"),
+    location:       val("et-location"),
+    subject:        val("et-subject"),
+    gradeLevel:     val("et-grade"),
+    hourlyRate:     parseFloat(val("et-rate")) || 0,
+    experience:     parseInt(val("et-exp"))    || 0,
+    qualifications: val("et-qualifications"),
+    bio:            val("et-bio")
   };
   try {
     await apiPut(`${API_CONFIG.ENDPOINTS.tutor}/${id}`, body);

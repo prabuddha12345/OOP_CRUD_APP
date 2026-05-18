@@ -19,6 +19,7 @@ public class Tutor {
     private String location;
     private String subject;
     private String gradeLevel;
+    private String qualifications;
     private Double hourlyRate;
     private Integer experience;
     @Column(length = 1000)

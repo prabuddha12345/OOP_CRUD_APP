@@ -25,12 +25,25 @@ public class TutorController {
     @PostMapping
     public org.springframework.http.ResponseEntity<?> create(@RequestBody Tutor tutor) {
         try {
+            // Check for duplicate username
+            if (tutor.getUsername() != null && repo.findByUsername(tutor.getUsername()).isPresent()) {
+                return org.springframework.http.ResponseEntity.status(400).body(new java.util.HashMap<String, String>() {{
+                    put("message", "Username already exists. Please choose another.");
+                }});
+            }
+            // Check for duplicate email
+            if (tutor.getEmail() != null && repo.findByEmail(tutor.getEmail()).isPresent()) {
+                return org.springframework.http.ResponseEntity.status(400).body(new java.util.HashMap<String, String>() {{
+                    put("message", "Email already exists. Please choose another.");
+                }});
+            }
+            
             Tutor saved = repo.save(tutor);
             CrudLogger.log("CREATE", "Tutor", saved.getId(), "SUCCESS");
             return org.springframework.http.ResponseEntity.ok(saved);
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
             return org.springframework.http.ResponseEntity.status(400).body(new java.util.HashMap<String, String>() {{
-                put("message", "Username already exists. Please choose another.");
+                put("message", "Username or email already exists. Please choose another.");
             }});
         } catch (Exception e) {
             return org.springframework.http.ResponseEntity.status(500).body(new java.util.HashMap<String, String>() {{
@@ -54,6 +67,7 @@ public class TutorController {
         if (tutor.getLocation() != null) existing.setLocation(tutor.getLocation());
         if (tutor.getSubject() != null) existing.setSubject(tutor.getSubject());
         if (tutor.getGradeLevel() != null) existing.setGradeLevel(tutor.getGradeLevel());
+        if (tutor.getQualifications() != null) existing.setQualifications(tutor.getQualifications());
         if (tutor.getHourlyRate() != null) existing.setHourlyRate(tutor.getHourlyRate());
         if (tutor.getExperience() != null) existing.setExperience(tutor.getExperience());
         if (tutor.getBio() != null) existing.setBio(tutor.getBio());
