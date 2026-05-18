@@ -1,5 +1,17 @@
-# 🎓 TutorEase — Home Tutoring Search & Booking System
-**Frontend: VS Code (HTML+CSS+JS) | Backend: IntelliJ (Java + Spring Boot) | DB: MySQL**
+# 🎓 TutorEase — Premium Home Tutoring Search, Booking & CRUD Management System
+**A sleek, responsive, and robust full-stack platform for connecting students with expert tutors.**
+
+---
+
+## 🌟 Key Features
+- **🔑 Role-Based Authentication & Registry**: Dynamic sign-up and login workflows for **Students**, **Tutors**, and **Admins** with secure token simulation.
+- **📁 Comprehensive CRUD Modules**:
+  - **Tutors**: Profile creation, subject offerings, grade level coverage, experience tracking, and biological details.
+  - **Students**: Dynamic directory, registration profile, details, and active status.
+  - **Bookings**: Student-to-tutor appointment scheduling, time/date/address inputs, and status tracking (`PENDING`, `CONFIRMED`, `COMPLETED`, `CANCELLED`).
+  - **Reviews & Ratings**: Student-submitted ratings and detailed reviews for tutors with permanent delete-cascading.
+  - **Payments**: Integrated payment portal enabling students to settle fees for pending or confirmed bookings safely.
+- **🎨 Premium UI/UX Design**: Sleek glassmorphism style sheet, smooth transitions, harmonized status badges, and interactive dashboard analytics.
 
 ---
 
@@ -7,66 +19,82 @@
 
 ```
 tutorease/
-├── frontend/                      ← Open in VS Code
-│   ├── index.html                 ← Homepage (search tutors)
-│   ├── css/style.css              ← All styling (edit here)
+├── frontend/                      ← Frontend Source (Open in VS Code)
+│   ├── index.html                 ← Main Landing Page (Hero + Subject Filters)
+│   ├── css/
+│   │   └── style.css              ← Premium HSL color scheme & Glassmorphism styling
 │   ├── js/
-│   │   ├── api.js                 ← Backend URL config
-│   │   └── app.js                 ← All CRUD logic
+│   │   ├── api.js                 ← Unified Backend Endpoint Configuration
+│   │   ├── app.js                 ← Core Dashboard logic & CRUD state management
+│   │   └── auth.js                ← Auth Token validation & registry validations
 │   └── pages/
-│       ├── tutors.html            ← Browse & filter tutors
-│       ├── bookings.html          ← Manage bookings
-│       └── admin.html             ← Admin dashboard
+│       ├── about.html             ← About Us informational page
+│       ├── admin.html             ← Master Admin panel (Full CRUD on all models)
+│       ├── bookings.html          ← Bookings & Payments tracking tab
+│       ├── contact.html           ← Contact & support inquiry form
+│       ├── login.html             ← Unified Login interface
+│       ├── privacy.html           ← Privacy & safety terms
+│       ├── register-student.html  ← Student Registration profile builder
+│       ├── register-tutor.html    ← Tutor Professional registry form
+│       ├── students.html          ← Student directory browser
+│       ├── teacher-dashboard.html ← Tutor portal (Approve/Reject bookings & reviews)
+│       └── tutors.html            ← Browse & filter active tutors
 │
-└── backend/                       ← Create your Spring Boot project here
-    └── (Spring Boot project via IntelliJ)
+└── backend/                       ← IntelliJ Maven Spring Boot Project
+    ├── pom.xml                    ← Maven Dependencies & Plugins
+    └── src/main/
+        ├── java/com/tutorease/
+        │   ├── TutorApiApplication.java    ← Spring Boot Core Bootstrapper
+        │   ├── controller/
+        │   │   ├── AuthController.java     ← Credentials & Session controller
+        │   │   ├── BookingController.java  ← Appointment booking coordinator
+        │   │   ├── PaymentController.java  ← Transaction processing API
+        │   │   ├── ReviewController.java   ← Reviews, scores, & ratings API
+        │   │   ├── StudentController.java  ← Student profiles manager
+        │   │   └── TutorController.java    ← Tutor registries coordinator
+        │   ├── crud/
+        │   │   ├── BookingCrud.java        ← Procedural helper / Log coordinator
+        │   │   ├── ReviewCrud.java
+        │   │   └── TutorCrud.java
+        │   ├── model/
+        │   │   ├── Booking.java            ← JPA Entity for appointments
+        │   │   ├── Payment.java            ← JPA Entity for payment records
+        │   │   ├── Review.java             ← JPA Entity for reviews & ratings
+        │   │   ├── Student.java            ← JPA Entity for student details
+        │   │   └── Tutor.java              ← JPA Entity for professional tutors
+        │   ├── repository/
+        │   │   ├── BookingRepository.java
+        │   │   ├── PaymentRepository.java
+        │   │   ├── ReviewRepository.java
+        │   │   ├── StudentRepository.java
+        │   │   └── TutorRepository.java
+        │   └── util/
+        │       └── CrudLogger.java         ← Global database transaction logging
+        └── resources/
+            ├── application.properties      ← Datasource & JPA configuration
+            └── static/                     ← Backend-embedded frontend mirror
 ```
 
 ---
 
 ## ⚡ STEP 1 — Open Frontend in VS Code
 
-1. Install **VS Code**: https://code.visualstudio.com
+1. Install **VS Code**: [https://code.visualstudio.com](https://code.visualstudio.com)
 2. Install **Live Server** extension:
-   - Click Extensions icon → search "Live Server" → Install
-3. **File > Open Folder** → select the `frontend/` folder
-4. Right-click `index.html` → **"Open with Live Server"**
-5. Site opens at: `http://127.0.0.1:5500`
-
-> The site shows "Backend: Offline" until Spring Boot is running — that's normal!
-
-**Recommended VS Code extensions:**
-| Extension | Purpose |
-|-----------|---------|
-| Live Server | Auto-refresh on save |
-| Prettier | Format code automatically |
-| HTML CSS Support | Better autocomplete |
-| JavaScript (ES6) snippets | Faster JS coding |
+   - Click Extensions icon (`Ctrl+Shift+X`) → Search **Live Server** → Click **Install**.
+3. **File > Open Folder** → Select the `frontend/` directory.
+4. Right-click `index.html` → **"Open with Live Server"**.
+5. The application will launch dynamically at `http://127.0.0.1:5500`.
 
 ---
 
-## ☕ STEP 2 — Create Spring Boot Project (IntelliJ)
+## ☕ STEP 2 — Spring Boot Backend Setup (IntelliJ)
 
-### 2a. Generate at start.spring.io
-1. Go to: **https://start.spring.io**
-2. Settings:
-   - Project: **Maven**
-   - Language: **Java**
-   - Spring Boot: **3.x (latest)**
-   - Group: `com.tutorease`
-   - Artifact: `tutor-api`
-3. Dependencies to add:
-   - ✅ Spring Web
-   - ✅ Spring Data JPA
-   - ✅ MySQL Driver
-   - ✅ Lombok *(reduces boilerplate)*
-4. Click **Generate** → download ZIP → extract → open in IntelliJ
-
-### 2b. application.properties
-Edit `src/main/resources/application.properties`:
+### 2a. System Configurations (`application.properties`)
+Configure `backend/src/main/resources/application.properties` to connect to your MySQL database:
 
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/tutorease_db
+spring.datasource.url=jdbc:mysql://localhost:3306/tutorease_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
 spring.datasource.username=root
 spring.datasource.password=YOUR_MYSQL_PASSWORD
 spring.jpa.hibernate.ddl-auto=update
@@ -77,285 +105,133 @@ server.port=8080
 
 ---
 
-## 🗄️ STEP 3 — MySQL Database Setup
+## 🗄️ STEP 3 — MySQL Database Schema Setup
+
+Database tables are automatically initialized and updated by Hibernate using `ddl-auto=update`. If you wish to manually query or verify the table definitions in MySQL Workbench, use the following schema:
 
 ```sql
--- Run in MySQL Workbench or terminal
-CREATE DATABASE tutorease_db;
+CREATE DATABASE IF NOT EXISTS tutorease_db;
 USE tutorease_db;
 
--- Tables will be auto-created by Spring Boot (ddl-auto=update)
--- But you can manually create them:
-
+-- Tutor Table
 CREATE TABLE tutor (
-  id          BIGINT AUTO_INCREMENT PRIMARY KEY,
-  name        VARCHAR(100) NOT NULL,
-  email       VARCHAR(150) NOT NULL,
-  phone       VARCHAR(20)  NOT NULL,
-  location    VARCHAR(150) NOT NULL,
-  subject     VARCHAR(100) NOT NULL,
-  grade_level VARCHAR(50)  NOT NULL,
-  hourly_rate DECIMAL(10,2) DEFAULT 0,
-  experience  INT DEFAULT 0,
-  bio         TEXT
+  id           BIGINT AUTO_INCREMENT PRIMARY KEY,
+  name         VARCHAR(100) NOT NULL,
+  email        VARCHAR(150) NOT NULL UNIQUE,
+  phone        VARCHAR(20)  NOT NULL,
+  location     VARCHAR(150) NOT NULL,
+  subject      VARCHAR(100) NOT NULL,
+  grade_level  VARCHAR(50)  NOT NULL,
+  hourly_rate  DECIMAL(10,2) DEFAULT 0.0,
+  experience   INT DEFAULT 0,
+  bio          TEXT
 );
 
+-- Student Table
+CREATE TABLE student (
+  id           BIGINT AUTO_INCREMENT PRIMARY KEY,
+  name         VARCHAR(100) NOT NULL,
+  email        VARCHAR(150) NOT NULL UNIQUE,
+  phone        VARCHAR(20)  NOT NULL,
+  grade_level  VARCHAR(50)  NOT NULL,
+  location     VARCHAR(150) NOT NULL
+);
+
+-- Booking Table
 CREATE TABLE booking (
   id           BIGINT AUTO_INCREMENT PRIMARY KEY,
   tutor_id     BIGINT       NOT NULL,
   student_name VARCHAR(100) NOT NULL,
   phone        VARCHAR(20)  NOT NULL,
-  session_date DATE         NOT NULL,
-  session_time TIME         NOT NULL,
+  session_date VARCHAR(50)  NOT NULL,
+  session_time VARCHAR(50)  NOT NULL,
   address      VARCHAR(255) NOT NULL,
   notes        TEXT,
-  status       ENUM('PENDING','CONFIRMED','COMPLETED','CANCELLED') DEFAULT 'PENDING',
+  status       VARCHAR(50) DEFAULT 'PENDING',
+  tutor_name   VARCHAR(100),
+  subject      VARCHAR(100),
   FOREIGN KEY (tutor_id) REFERENCES tutor(id) ON DELETE CASCADE
+);
+
+-- Review Table
+CREATE TABLE review (
+  id           BIGINT AUTO_INCREMENT PRIMARY KEY,
+  tutor_id     BIGINT NOT NULL,
+  student_name VARCHAR(100) NOT NULL,
+  rating       INT NOT NULL,
+  comment      TEXT,
+  FOREIGN KEY (tutor_id) REFERENCES tutor(id) ON DELETE CASCADE
+);
+
+-- Payment Table
+CREATE TABLE payment (
+  id           BIGINT AUTO_INCREMENT PRIMARY KEY,
+  booking_id   BIGINT NOT NULL,
+  student_name VARCHAR(100) NOT NULL,
+  tutor_name   VARCHAR(100) NOT NULL,
+  amount       DECIMAL(10,2) NOT NULL,
+  payment_date VARCHAR(50) NOT NULL,
+  card_number  VARCHAR(20) NOT NULL,
+  status       VARCHAR(50) NOT NULL
 );
 ```
 
 ---
 
-## 🔧 STEP 4 — Java Code to Write in IntelliJ
+## 🔧 STEP 4 — Java OOP REST APIs Reference
 
-### 📄 Tutor.java (Entity)
-```java
-package com.tutorease.model;
+### 📁 1. Models & Entities
+All data is handled securely as robust Java entities inside `com.tutorease.model`:
+- **`Tutor.java`**: Fields include name, hourlyRate, experience, subject, and gradeLevel.
+- **`Student.java`**: Fields include name, gradeLevel, phone, and location.
+- **`Booking.java`**: Manages tutor associations, date, time, and session status.
+- **`Review.java`**: Stores tutor ratings ($1-5$ stars) and comments.
+- **`Payment.java`**: Records amount, booking mapping, date, and processing state.
 
-import jakarta.persistence.*;
-import lombok.Data;
+### 📁 2. Repository Layer
+Inherited from standard `JpaRepository` to perform lightning-fast Hibernate SQL actions:
+- `TutorRepository`: Features search filters for subject, location, and grade level.
+- `StudentRepository`: Direct profile checks and authentication hooks.
+- `BookingRepository`: Filters active lists by status or specific tutor keys.
+- `ReviewRepository`: Allows fetching rating lists belonging to individual instructors.
+- `PaymentRepository`: Tracks individual transaction audits.
 
-@Entity
-@Data
-public class Tutor {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private String email;
-    private String phone;
-    private String location;
-    private String subject;
-    private String gradeLevel;
-    private Double hourlyRate;
-    private Integer experience;
-    @Column(length = 1000)
-    private String bio;
-}
-```
+### 📁 3. Controller Layer (CRUD Routes)
 
-### 📄 Booking.java (Entity)
-```java
-package com.tutorease.model;
-
-import jakarta.persistence.*;
-import lombok.Data;
-
-@Entity
-@Data
-public class Booking {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Long tutorId;
-    private String studentName;
-    private String phone;
-    private String sessionDate;
-    private String sessionTime;
-    private String address;
-    private String notes;
-    private String status = "PENDING";
-
-    // These are filled by the backend before saving
-    private String tutorName;
-    private String subject;
-}
-```
-
-### 📄 TutorRepository.java
-```java
-package com.tutorease.repository;
-
-import com.tutorease.model.Tutor;
-import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
-
-public interface TutorRepository extends JpaRepository<Tutor, Long> {
-    List<Tutor> findBySubjectContainingIgnoreCase(String subject);
-    List<Tutor> findByLocationContainingIgnoreCase(String location);
-    List<Tutor> findByGradeLevel(String gradeLevel);
-}
-```
-
-### 📄 BookingRepository.java
-```java
-package com.tutorease.repository;
-
-import com.tutorease.model.Booking;
-import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
-
-public interface BookingRepository extends JpaRepository<Booking, Long> {
-    List<Booking> findByStatus(String status);
-    List<Booking> findByTutorId(Long tutorId);
-}
-```
-
-### 📄 TutorController.java (REST API — CRUD)
-```java
-package com.tutorease.controller;
-
-import com.tutorease.model.Tutor;
-import com.tutorease.repository.TutorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
-
-@RestController
-@RequestMapping("/api/tutors")
-@CrossOrigin(origins = "*")   // Allows frontend to call this API
-public class TutorController {
-
-    @Autowired TutorRepository repo;
-
-    // GET all tutors
-    @GetMapping
-    public List<Tutor> getAll() { return repo.findAll(); }
-
-    // GET single tutor by id
-    @GetMapping("/{id}")
-    public Tutor getById(@PathVariable Long id) {
-        return repo.findById(id).orElseThrow();
-    }
-
-    // POST - create tutor
-    @PostMapping
-    public Tutor create(@RequestBody Tutor tutor) {
-        return repo.save(tutor);
-    }
-
-    // PUT - update tutor
-    @PutMapping("/{id}")
-    public Tutor update(@PathVariable Long id, @RequestBody Tutor tutor) {
-        tutor.setId(id);
-        return repo.save(tutor);
-    }
-
-    // DELETE tutor
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        repo.deleteById(id);
-    }
-}
-```
-
-### 📄 BookingController.java
-```java
-package com.tutorease.controller;
-
-import com.tutorease.model.Booking;
-import com.tutorease.model.Tutor;
-import com.tutorease.repository.BookingRepository;
-import com.tutorease.repository.TutorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import java.util.Map;
-
-@RestController
-@RequestMapping("/api/bookings")
-@CrossOrigin(origins = "*")
-public class BookingController {
-
-    @Autowired BookingRepository bookingRepo;
-    @Autowired TutorRepository   tutorRepo;
-
-    // GET all bookings
-    @GetMapping
-    public List<Booking> getAll() { return bookingRepo.findAll(); }
-
-    // POST - create booking
-    @PostMapping
-    public Booking create(@RequestBody Booking booking) {
-        // Enrich booking with tutor info
-        tutorRepo.findById(booking.getTutorId()).ifPresent(tutor -> {
-            booking.setTutorName(tutor.getName());
-            booking.setSubject(tutor.getSubject());
-        });
-        booking.setStatus("PENDING");
-        return bookingRepo.save(booking);
-    }
-
-    // PUT - update booking status
-    @PutMapping("/{id}/status")
-    public Booking updateStatus(@PathVariable Long id, @RequestBody Map<String, String> body) {
-        Booking b = bookingRepo.findById(id).orElseThrow();
-        b.setStatus(body.get("status"));
-        return bookingRepo.save(b);
-    }
-
-    // DELETE booking
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        bookingRepo.deleteById(id);
-    }
-}
-```
+| Component | Method | API Endpoint | Description |
+|-----------|--------|--------------|-------------|
+| **Auth** | `POST` | `/api/auth/login` | Validates session credentials and assigns roles. |
+| **Tutors** | `GET` | `/api/tutors` | Retrieves the list of all active instructors. |
+| **Tutors** | `POST` | `/api/tutors` | Adds a new tutor registry to the system. |
+| **Tutors** | `PUT` | `/api/tutors/{id}` | Updates profile details (experience, rates). |
+| **Tutors** | `DELETE`| `/api/tutors/{id}` | Deletes a tutor profile permanently. |
+| **Students**| `GET` | `/api/students` | Gets all registered students' lists. |
+| **Students**| `POST` | `/api/students` | Registers a new student profile. |
+| **Bookings**| `GET` | `/api/bookings` | Fetches appointment logs. |
+| **Bookings**| `POST` | `/api/bookings` | Submits a new booking request. |
+| **Bookings**| `PUT` | `/api/bookings/{id}/status`| Alters booking status (`CONFIRMED`, `COMPLETED`, `CANCELLED`). |
+| **Bookings**| `DELETE`| `/api/bookings/{id}` | Removes a scheduled booking. |
+| **Reviews** | `GET` | `/api/reviews/tutor/{tutorId}`| Fetches ratings/feedback history for a tutor. |
+| **Reviews** | `POST` | `/api/reviews` | Submits a tutor review & score. |
+| **Reviews** | `DELETE`| `/api/reviews/{id}` | Safely deletes tutor review. |
+| **Payments**| `POST` | `/api/payments` | Records card payments & updates booking state. |
 
 ---
 
 ## ▶️ STEP 5 — Run Everything
 
-| What | How |
-|------|-----|
-| Start MySQL | Open MySQL Workbench or terminal |
-| Start Backend | IntelliJ → Run `TutorApiApplication` (green ▶ button) |
-| Start Frontend | VS Code → Right-click `index.html` → Open with Live Server |
-
-Then open: **http://127.0.0.1:5500** 🎉
+1. **MySQL Server**: Ensure MySQL local service is started.
+2. **Spring Boot (IntelliJ)**: Run `TutorApiApplication.java` (Click the green play button ▶).
+3. **Frontend (VS Code)**: Open `index.html` using the **Live Server** extension.
+4. Access the gorgeous app dashboard in your browser: **`http://127.0.0.1:5500`**! 🎉
 
 ---
 
-## 🔌 How Frontend ↔ Backend Works
+## 🐛 Common Problems & Quick Fixes
 
-All URLs are in `js/api.js`:
-```js
-BASE_URL: "http://localhost:8080/api"
-```
-
-| Action | Method | URL |
-|--------|--------|-----|
-| Get all tutors | GET | `/api/tutors` |
-| Add tutor | POST | `/api/tutors` |
-| Update tutor | PUT | `/api/tutors/{id}` |
-| Delete tutor | DELETE | `/api/tutors/{id}` |
-| Get all bookings | GET | `/api/bookings` |
-| Create booking | POST | `/api/bookings` |
-| Update booking status | PUT | `/api/bookings/{id}/status` |
-| Delete booking | DELETE | `/api/bookings/{id}` |
-
----
-
-## 🐛 Common Problems & Fixes
-
-| Problem | Fix |
-|---------|-----|
-| "Backend: Offline" badge | Start Spring Boot in IntelliJ |
-| CORS error in browser console | Add `@CrossOrigin(origins = "*")` to your controllers |
-| MySQL connection refused | Start MySQL; check username/password in application.properties |
-| Tables not created | Check ddl-auto=update; look at IntelliJ console for errors |
-| Port 8080 busy | Change `server.port=8081` and update `api.js` BASE_URL |
-
----
-
-## 📌 Files to Edit — Quick Reference
-
-| To change... | Edit this file |
-|-------------|---------------|
-| Homepage layout | `frontend/index.html` |
-| Tutor listings page | `frontend/pages/tutors.html` |
-| Bookings page | `frontend/pages/bookings.html` |
-| Admin dashboard | `frontend/pages/admin.html` |
-| Colors, fonts, layout | `frontend/css/style.css` |
-| Backend URL | `frontend/js/api.js` → `BASE_URL` |
-| CRUD behavior | `frontend/js/app.js` |
-| Database config | `backend/src/main/resources/application.properties` |
-| API endpoints | `backend/.../TutorController.java` / `BookingController.java` |
+| Problem | Explanation | Resolution |
+|---------|-------------|------------|
+| **"Backend: Offline" badge** | The frontend can't fetch data from the Spring API. | Verify that your backend application is actively running on port `8080`. |
+| **CORS Policy Blocking** | The browser blocks cross-origin requests. | Ensure all controllers in the Java layer have `@CrossOrigin(origins = "*")`. |
+| **MySQL Connection Denied** | Spring Boot cannot query database tables. | Verify database credentials match inside `application.properties` and start local MySQL service. |
+| **Port 8080 is in use** | A local port conflict exists. | Edit `server.port=8081` in your properties, and update `BASE_URL` in `js/api.js`. |
