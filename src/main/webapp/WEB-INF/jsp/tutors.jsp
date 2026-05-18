@@ -1,1 +1,217 @@
-﻿<%@ page contentType="text/html;charset=UTF-8" %><html><body><h2>Tutors</h2></body></html>
+﻿<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Find Tutors — TutorEase</title>
+  <jsp:include page="header.jsp"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700;1,800&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <nav class="navbar">
+    <!-- Content injected by js/auth.js -->
+  </nav>
+
+  <div class="page-wrap">
+    <aside class="filter-sidebar">
+      <h3>Filter Tutors</h3>
+
+      <div class="filter-group">
+        <label>Subject</label>
+        <select id="f-subject" onchange="applyFilters()">
+          <option value="">All Subjects</option>
+          <option>Mathematics</option>
+          <option>Science</option>
+          <option>English</option>
+          <option>Physics</option>
+          <option>Chemistry</option>
+          <option>Biology</option>
+          <option>ICT</option>
+          <option>History</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Grade Level</label>
+        <select id="f-grade" onchange="applyFilters()">
+          <option value="">All Grades</option>
+          <option>Grade 1–5</option>
+          <option>Grade 6–9</option>
+          <option>O/L (Grade 10–11)</option>
+          <option>A/L (Grade 12–13)</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Location</label>
+        <input type="text" id="f-location" placeholder="City or area..." oninput="applyFilters()"/>
+      </div>
+
+      <div class="filter-group">
+        <label>Max Rate (LKR/hr)</label>
+        <input type="number" id="f-rate" placeholder="e.g. 2000" oninput="applyFilters()"/>
+      </div>
+
+      <button class="btn btn-outline" onclick="clearFilters()" style="width:100%;margin-top:8px">Clear Filters</button>
+    </aside>
+
+    <main class="tutor-main">
+      <div class="tutor-main-header">
+        <h2>Available Tutors</h2>
+        <span class="result-count" id="result-count">Loading...</span>
+      </div>
+      <div class="tutor-grid wide" id="tutor-grid">
+        <div class="loading-msg">Fetching tutors...</div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ADD TUTOR MODAL -->
+  <div class="modal-overlay" id="add-tutor-modal" style="display:none">
+    <div class="modal">
+      <h3>Register as a Tutor</h3>
+      <div class="modal-form">
+        <div class="form-row-2">
+          <div class="field-group">
+            <label>Full Name</label>
+            <input type="text" id="t-name" placeholder="e.g. Priya Senanayake"/>
+          </div>
+          <div class="field-group">
+            <label>Email</label>
+            <input type="email" id="t-email" placeholder="email@example.com"/>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="field-group">
+            <label>Phone</label>
+            <input type="text" id="t-phone" placeholder="077 123 4567"/>
+          </div>
+          <div class="field-group">
+            <label>Location</label>
+            <input type="text" id="t-location" placeholder="e.g. Colombo 7"/>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="field-group">
+            <label>Subject</label>
+            <select id="t-subject">
+              <option>Mathematics</option><option>Science</option><option>English</option>
+              <option>Physics</option><option>Chemistry</option><option>Biology</option>
+              <option>ICT</option><option>History</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label>Grade Level</label>
+            <select id="t-grade">
+              <option>Grade 1–5</option><option>Grade 6–9</option>
+              <option>O/L (Grade 10–11)</option><option>A/L (Grade 12–13)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="field-group">
+            <label>Hourly Rate (LKR)</label>
+            <input type="number" id="t-rate" placeholder="e.g. 1500"/>
+          </div>
+          <div class="field-group">
+            <label>Experience (years)</label>
+            <input type="number" id="t-exp" placeholder="e.g. 5"/>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Bio / About</label>
+          <textarea id="t-bio" rows="3" placeholder="Brief description about teaching experience..."></textarea>
+        </div>
+      </div>
+      <p class="form-msg" id="tutor-msg"></p>
+      <div class="modal-btns">
+        <button class="btn btn-primary" onclick="addTutor()">Register Tutor</button>
+        <button class="btn btn-outline" onclick="closeModal('add-tutor-modal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOOK MODAL -->
+  <div class="modal-overlay" id="book-modal" style="display:none">
+    <div class="modal">
+      <h3>Book a Session</h3>
+      <input type="hidden" id="book-tutor-id"/>
+      <div class="book-tutor-info" id="book-tutor-info"></div>
+      <div class="modal-form">
+        <div class="form-row-2">
+          <div class="field-group">
+            <label>Your Name</label>
+            <input type="text" id="b-student" placeholder="Student / Parent name"/>
+          </div>
+          <div class="field-group">
+            <label>Phone</label>
+            <input type="text" id="b-phone" placeholder="Contact number"/>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="field-group">
+            <label>Session Date</label>
+            <input type="date" id="b-date"/>
+          </div>
+          <div class="field-group">
+            <label>Time</label>
+            <input type="time" id="b-time"/>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Address (where tutor should come)</label>
+          <input type="text" id="b-address" placeholder="Your home address"/>
+        </div>
+        <div class="field-group">
+          <label>Notes (optional)</label>
+          <textarea id="b-notes" rows="2" placeholder="Any special instructions..."></textarea>
+        </div>
+      </div>
+      <p class="form-msg" id="book-msg"></p>
+      <div class="modal-btns">
+        <button class="btn btn-primary" onclick="confirmBooking()">Confirm Booking</button>
+        <button class="btn btn-outline" onclick="closeModal('book-modal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-info">
+        <div class="footer-logo">Tutor<span>Ease</span></div>
+        <p>Connecting students with expert tutors across Sri Lanka. Quality education, personalized for you.</p>
+      </div>
+      <div class="footer-links-col">
+        <h4>Platform</h4>
+        <div class="footer-links">
+          <a href="/">Home</a>
+          <a href="/tutors">Find Tutors</a>
+          <a href="/register-tutor">Register as Tutor</a>
+        </div>
+      </div>
+      <div class="footer-links-col">
+        <h4>Support</h4>
+        <div class="footer-links">
+          <a href="/contact">Contact Us</a>
+          <a href="/about">About Us</a>
+          <a href="/privacy">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">&copy; 2024 TutorEase Platform. All rights reserved.</div>
+    </div>
+  </footer>
+
+  
+  
+  
+  <script>
+    loadAllTutors();
+  </script>
+</body>
+</html>
+
+
