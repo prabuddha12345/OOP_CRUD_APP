@@ -2,4 +2,7 @@
 import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/tutors")
-public class TutorController {}
+public class TutorController {
+    @GetMapping
+    public String getTutors() { return "[]"; }
+}
