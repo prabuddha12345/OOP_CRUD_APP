@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Students — TutorEase</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700;1,800&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    .student-card {
+      background: var(--surface);
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .student-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+    .sc-head { display: flex; gap: 16px; margin-bottom: 16px; align-items: center; }
+    .sc-avatar {
+      width: 56px; height: 56px;
+      background: var(--bg-alt);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+    }
+    .sc-name { font-weight: 700; font-size: 1.1rem; color: var(--text-main); }
+    .sc-username { font-size: 0.9rem; color: var(--muted); }
+    .sc-info { margin-bottom: 12px; font-size: 0.9rem; display: flex; flex-direction: column; gap: 4px; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <!-- Content injected by js/auth.js -->
+  </nav>
+
+  <div class="inner-page">
+    <div class="inner-header">
+      <div>
+        <h1>Registered Students</h1>
+        <p>A public directory of our active learners</p>
+      </div>
+      <div>
+        <span id="result-count" style="font-weight:600; color:var(--primary)">0 students found</span>
+      </div>
+    </div>
+
+    <div class="tutor-grid" id="students-grid" style="margin-top: 24px;">
+      <div class="loading-msg">Fetching students from backend...</div>
+    </div>
+  </div>
+
+  <footer class="footer" style="margin-top: auto;">
+    <div class="footer-bottom">
+      <div class="footer-copy">&copy; 2024 TutorEase Platform. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="../js/api.js?v=2"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js?v=2"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', loadAllStudents);
+  </script>
+</body>
+</html>

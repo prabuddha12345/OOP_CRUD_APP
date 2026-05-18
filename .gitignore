@@ -41,3 +41,7 @@ application-local.properties
 # Spring Boot packed jar
 *.jar
 *.war
+
+# Cloned backup repo
+cloned_repo/
+
