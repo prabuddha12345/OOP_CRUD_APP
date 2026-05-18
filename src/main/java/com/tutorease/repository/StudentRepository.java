@@ -1,4 +1,9 @@
-﻿package com.tutorease.repository;
-import org.springframework.data.jpa.repository.JpaRepository;
+package com.tutorease.repository;
+
 import com.tutorease.model.Student;
-public interface StudentRepository extends JpaRepository<Student, Long> {}
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Optional;
+
+public interface StudentRepository extends JpaRepository<Student, Long> {
+    Optional<Student> findByUsername(String username);
+}
