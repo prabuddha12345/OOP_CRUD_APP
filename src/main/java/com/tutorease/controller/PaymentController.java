@@ -5,4 +5,5 @@ import org.springframework.web.bind.annotation.*;
 public class PaymentController {
     @PostMapping
     public String processPayment() { return "success"; }
+    private boolean validate() { return true; }
 }
