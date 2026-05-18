@@ -104,7 +104,10 @@ function updateNavbar() {
 
   if (user) {
     if (user.role === "student") {
-      navHTML += `<a href="${prefix}bookings.html" id="nav-bookings">My Bookings</a>`;
+      navHTML += `
+        <a href="${prefix}bookings.html" id="nav-bookings">My Bookings</a>
+        <a href="${prefix}profile.html" id="nav-profile">My Profile</a>
+      `;
     } else if (user.role === "tutor") {
       navHTML += `<a href="${prefix}teacher-dashboard.html" id="nav-teacher">Teacher Dashboard</a>`;
     } else if (user.role === "admin") {
@@ -131,6 +134,8 @@ function updateNavbar() {
     document.getElementById("nav-tutors")?.classList.add("active");
   } else if (currentPath.includes("bookings.html")) {
     document.getElementById("nav-bookings")?.classList.add("active");
+  } else if (currentPath.includes("profile.html")) {
+    document.getElementById("nav-profile")?.classList.add("active");
   } else if (currentPath.includes("admin.html")) {
     document.getElementById("nav-admin")?.classList.add("active");
   } else if (currentPath.includes("teacher-dashboard.html")) {
@@ -154,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  if (currentPath.includes("bookings.html")) {
+  if (currentPath.includes("bookings.html") || currentPath.includes("profile.html")) {
     if (!user || user.role !== "student") {
       const inPagesDir = window.location.pathname.includes("/pages/");
       window.location.href = inPagesDir ? "login.html" : "pages/login.html";
