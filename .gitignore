@@ -1,0 +1,50 @@
+# =============================================
+#  TutorEase — .gitignore
+# =============================================
+
+# Maven build output
+target/
+
+# Maven wrapper (optional, keep only if you want)
+!backend/.mvn/
+
+# IDE files
+.idea/
+.smarttomcat/
+*.iml
+.vscode/
+*.code-workspace
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node modules (if any frontend tooling is added)
+node_modules/
+
+# Logs
+*.log
+logs/
+
+# Environment / secrets
+*.env
+application-local.properties
+
+# Temp files
+*.tmp
+*.bak
+*.swp
+
+# Java
+*.class
+
+# Spring Boot packed jar
+*.jar
+*.war
+
+# Custom logs
+crud
+
+
+.maven_temp/
