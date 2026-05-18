@@ -484,9 +484,13 @@ async function openPaymentModal(bookingId, tutorId) {
   // Fetch tutor rate
   try {
     const tutor = await apiGet(`${API_CONFIG.ENDPOINTS.tutors}/${tutorId}`);
-    document.getElementById("p-amount").value = tutor.hourlyRate || 0;
+    let rate = 1500.0;
+    if (tutor && tutor.hourlyRate && tutor.hourlyRate > 0) {
+      rate = tutor.hourlyRate;
+    }
+    document.getElementById("p-amount").value = rate;
   } catch (e) {
-    document.getElementById("p-amount").value = 0;
+    document.getElementById("p-amount").value = 1500.0;
   }
 
   const msg = document.getElementById("payment-msg");
@@ -501,6 +505,7 @@ async function submitPayment() {
   const amount = val("p-amount");
   const method = val("p-method");
   const msg = document.getElementById("payment-msg");
+  const submitBtn = document.getElementById("p-submit-btn");
 
   const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
   if (!user || user.role !== 'student') {
@@ -509,8 +514,12 @@ async function submitPayment() {
   }
 
   try {
-    document.getElementById("p-submit-btn").disabled = true;
-    const payRes = await apiPost(API_CONFIG.ENDPOINTS.payments, {
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Processing...";
+    }
+
+    await apiPost(API_CONFIG.ENDPOINTS.payments, {
       booking: { id: parseInt(bookingId) },
       student: { id: parseInt(user.id) },
       tutor: { id: parseInt(tutorId) },
@@ -518,15 +527,22 @@ async function submitPayment() {
       paymentMethod: method,
       status: "PAID" // Directly set as PAID for simulation
     });
+    
     showMsg(msg, "✅ Payment successful!", "var(--accent)");
     setTimeout(() => {
       closeModal("payment-modal");
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Confirm Payment";
+      }
       loadBookings(); // Refresh to show PAID status
     }, 1500);
   } catch (err) {
     showMsg(msg, `❌ Payment failed: ${err.message}`, "var(--danger)");
-  } finally {
-    document.getElementById("p-submit-btn").disabled = false;
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Confirm Payment";
+    }
   }
 }
 

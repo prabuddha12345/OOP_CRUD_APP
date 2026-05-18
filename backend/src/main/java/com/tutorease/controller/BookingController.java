@@ -4,6 +4,7 @@ import com.tutorease.model.Booking;
 import com.tutorease.model.Tutor;
 import com.tutorease.repository.BookingRepository;
 import com.tutorease.repository.TutorRepository;
+import com.tutorease.repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -17,6 +18,7 @@ public class BookingController {
 
     @Autowired BookingRepository bookingRepo;
     @Autowired TutorRepository   tutorRepo;
+    @Autowired PaymentRepository paymentRepo;
 
     @GetMapping
     public List<Booking> getAll() { return bookingRepo.findAll(); }
@@ -46,12 +48,17 @@ public class BookingController {
     public org.springframework.http.ResponseEntity<?> delete(@PathVariable Long id) {
         System.out.println("Deleting booking: " + id);
         try {
+            // Delete associated payments first
+            paymentRepo.findByBookingId(id).ifPresent(p -> paymentRepo.delete(p));
+            
             bookingRepo.deleteById(id);
             CrudLogger.log("DELETE", "Booking", id, "SUCCESS");
             return org.springframework.http.ResponseEntity.ok().build();
         } catch (Exception e) {
             e.printStackTrace();
-            return org.springframework.http.ResponseEntity.status(500).body(e.getMessage());
+            return org.springframework.http.ResponseEntity.status(500).body(new java.util.HashMap<String, String>() {{
+                put("message", "Could not delete booking. Dependency error.");
+            }});
         }
     }
 }
