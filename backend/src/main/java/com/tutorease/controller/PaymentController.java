@@ -44,21 +44,49 @@ public class PaymentController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Payment payment) {
-        // Prevent duplicate payment for same booking
+        // Enforce the correct payment amount from the tutor's rate
+        Double tutorRate = 0.0;
+        if (payment.getTutor() != null && payment.getTutor().getId() != null) {
+            com.tutorease.model.Tutor tutor = tutorRepo.findById(payment.getTutor().getId()).orElse(null);
+            if (tutor != null && tutor.getHourlyRate() != null) {
+                tutorRate = tutor.getHourlyRate();
+            }
+        }
+        
+        Double finalAmount = 1500.0;
+        if (tutorRate > 0) {
+            finalAmount = tutorRate;
+        } else if (payment.getAmount() != null && payment.getAmount() > 0) {
+            finalAmount = payment.getAmount();
+        }
+        
+        // Prevent duplicate payment for same booking, but reuse/update pending/failed records
         if (payment.getBooking() != null && payment.getBooking().getId() != null) {
-            Optional<Payment> existing = paymentRepo.findByBookingId(payment.getBooking().getId());
-            if (existing.isPresent()) {
-                return ResponseEntity.badRequest().body("Payment already exists for this booking.");
+            Optional<Payment> existingOpt = paymentRepo.findByBookingId(payment.getBooking().getId());
+            if (existingOpt.isPresent()) {
+                Payment existing = existingOpt.get();
+                if ("PAID".equalsIgnoreCase(existing.getStatus()) || "SUCCESS".equalsIgnoreCase(existing.getStatus())) {
+                    return ResponseEntity.badRequest().body(new java.util.HashMap<String, String>() {{
+                        put("message", "Payment already exists for this booking.");
+                    }});
+                } else {
+                    // Update and reuse the existing pending/failed/cancelled row
+                    existing.setPaymentMethod(payment.getPaymentMethod());
+                    existing.setAmount(finalAmount);
+                    existing.setStatus(payment.getStatus() != null && !payment.getStatus().isEmpty() ? payment.getStatus() : "PAID");
+                    existing.setPaymentDate(LocalDateTime.now());
+                    Payment saved = paymentRepo.save(existing);
+                    CrudLogger.log("UPDATE", "Payment", saved.getId(), "SUCCESS");
+                    return ResponseEntity.ok(saved);
+                }
             }
         }
 
-        // Enforce the correct payment amount from the tutor's rate
-        if (payment.getTutor() != null && payment.getTutor().getId() != null) {
-            com.tutorease.model.Tutor tutor = tutorRepo.findById(payment.getTutor().getId()).orElseThrow(() -> new RuntimeException("Tutor not found"));
-            payment.setAmount(tutor.getHourlyRate());
+        // Create new payment
+        payment.setAmount(finalAmount);
+        if (payment.getStatus() == null || payment.getStatus().isEmpty()) {
+            payment.setStatus("PAID"); // Simulated successful payment
         }
-        
-        payment.setStatus("PENDING");
         payment.setPaymentDate(LocalDateTime.now());
         Payment saved = paymentRepo.save(payment);
         

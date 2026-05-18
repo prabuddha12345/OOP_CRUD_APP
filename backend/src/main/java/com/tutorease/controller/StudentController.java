@@ -19,6 +19,12 @@ public class StudentController {
     @Autowired
     private StudentRepository studentRepo;
 
+    @Autowired
+    private com.tutorease.repository.PaymentRepository paymentRepo;
+
+    @Autowired
+    private com.tutorease.repository.BookingRepository bookingRepo;
+
     @GetMapping
     public List<Student> getAll() {
         return studentRepo.findAll();
@@ -59,11 +65,36 @@ public class StudentController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
+            Student student = studentRepo.findById(id).orElse(null);
+            if (student != null) {
+                // Delete all payments linked to this student
+                List<com.tutorease.model.Payment> payments = paymentRepo.findByStudentId(id);
+                for (com.tutorease.model.Payment p : payments) {
+                    paymentRepo.delete(p);
+                }
+                
+                // Delete all bookings linked to this student
+                List<com.tutorease.model.Booking> bookings = bookingRepo.findAll();
+                for (com.tutorease.model.Booking b : bookings) {
+                    if (student.getUsername().equalsIgnoreCase(b.getStudentName()) || 
+                        (student.getName() != null && student.getName().equalsIgnoreCase(b.getStudentName()))) {
+                        
+                        // First delete payments associated with this booking
+                        paymentRepo.findByBookingId(b.getId()).ifPresent(p -> paymentRepo.delete(p));
+                        
+                        bookingRepo.delete(b);
+                    }
+                }
+            }
+            
             studentRepo.deleteById(id);
             CrudLogger.log("DELETE", "Student", id, "SUCCESS");
             return ResponseEntity.ok().build();
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(new java.util.HashMap<String, String>() {{
+                put("message", "Could not delete student. Dependency error.");
+            }});
         }
     }
 
