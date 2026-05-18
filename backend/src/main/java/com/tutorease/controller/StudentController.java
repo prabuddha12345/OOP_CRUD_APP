@@ -45,7 +45,11 @@ public class StudentController {
         if (student.getPhone() != null) existing.setPhone(student.getPhone());
         if (student.getGradeLevel() != null) existing.setGradeLevel(student.getGradeLevel());
         if (student.getUsername() != null) existing.setUsername(student.getUsername());
-        if (student.getPassword() != null) existing.setPassword(student.getPassword());
+        if (student.getPassword() != null && !student.getPassword().trim().isEmpty()) {
+            existing.setPassword(student.getPassword());
+        }
+        if (student.getAddress() != null) existing.setAddress(student.getAddress());
+        if (student.getProfilePicture() != null) existing.setProfilePicture(student.getProfilePicture());
         
         Student saved = studentRepo.save(existing);
         CrudLogger.log("UPDATE", "Student", saved.getId(), "SUCCESS");
