@@ -20,6 +20,8 @@ public class Student {
     private String phone;
     private String name;
     private String gradeLevel;
+    private String address;
+    private String profilePicture;
     
     @Transient
     private String role = "student";
