@@ -7,4 +7,5 @@ public class PaymentController {
     public String processPayment() { return "success"; }
     @GetMapping("/{id}")
     public String getReceipt() { return "receipt"; }
+    private double calculateFee(double rate, double hours) { return rate * hours; }
 }
