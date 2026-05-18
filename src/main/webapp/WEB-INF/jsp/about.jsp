@@ -1,0 +1,81 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Us — TutorEase</title>
+  <jsp:include page="header.jsp"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700;1,800&family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <nav class="navbar">
+    <!-- Content injected by js/auth.js -->
+  </nav>
+
+  <div class="inner-page">
+    <div class="inner-header" style="text-align:center; display:block">
+      <h1>Our Mission</h1>
+      <p>Transforming education through accessibility and excellence</p>
+    </div>
+
+    <div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 64px;">
+      <section style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;">
+        <div>
+          <h2 style="font-family: var(--font-head); font-size: 2.2rem; margin-bottom: 24px;">Who We Are</h2>
+          <p style="color: var(--muted); font-size: 1.1rem;">TutorEase was founded in 2024 with a simple goal: to make finding high-quality, personalized tutoring easier for every student in Sri Lanka. We believe that every student has the potential to excel if given the right guidance.</p>
+        </div>
+        <div class="card" style="height: 300px; background: var(--accent-light); display: flex; align-items: center; justify-content: center; font-size: 5rem;">🎓</div>
+      </section>
+
+      <section style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;">
+        <div class="card" style="height: 300px; background: #fff4e0; display: flex; align-items: center; justify-content: center; font-size: 5rem;">🤝</div>
+        <div style="order: -1;">
+          <h2 style="font-family: var(--font-head); font-size: 2.2rem; margin-bottom: 24px; order: 2;">Why Choose Us</h2>
+          <ul style="color: var(--muted); font-size: 1.1rem; list-style: none; display: flex; flex-direction: column; gap: 16px;">
+            <li>✅ <strong>Vetted Tutors:</strong> We only partner with experienced and passionate educators.</li>
+            <li>✅ <strong>Flexible Scheduling:</strong> Book sessions that fit your busy life.</li>
+            <li>✅ <strong>Subject Variety:</strong> From primary school to university-level courses.</li>
+            <li>✅ <strong>Direct Communication:</strong> Speak directly with your tutor before you book.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-info">
+        <div class="footer-logo">Tutor<span>Ease</span></div>
+        <p>Connecting students with expert tutors across Sri Lanka. Quality education, personalized for you.</p>
+      </div>
+      <div class="footer-links-col">
+        <h4>Platform</h4>
+        <div class="footer-links">
+          <a href="/">Home</a>
+          <a href="/tutors">Find Tutors</a>
+          <a href="/register-tutor">Register as Tutor</a>
+        </div>
+      </div>
+      <div class="footer-links-col">
+        <h4>Support</h4>
+        <div class="footer-links">
+          <a href="/contact">Contact Us</a>
+          <a href="/about">About Us</a>
+          <a href="/privacy">Privacy Policy</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">&copy; 2024 TutorEase Platform. All rights reserved.</div>
+    </div>
+  </footer>
+
+  
+  
+  
+</body>
+</html>
+
+
